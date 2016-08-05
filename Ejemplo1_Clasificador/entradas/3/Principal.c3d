@@ -1,0 +1,118 @@
+int STACK[100];
+int HEAP[100];
+int p = 0;
+int h = 0;
+
+int t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18;
+int main(){
+	//declaracion del objeto dato1
+	t1 = h + 0;
+	t2 = h + 1;
+	
+	t3 = p + 1;
+	STACK[t3] = t1; // STACK[1] = 0;
+	
+	HEAP[t1] = 0;
+	HEAP[t2] = 0;
+	
+	
+	//declaracion del objeto dato2
+	t4 = h + 2;
+	t5 = h + 3;
+	t6 = h + 4;
+	
+	t7 = p + 2;
+	STACK[t7] = t4; // STACK[2] = 2;
+	
+	HEAP[t4] = 0;
+	HEAP[t5] = 0;
+	HEAP[t6] = 0;
+	
+	//declaracion del objeto dato3
+	t8 = h + 5;
+	t9 = h + 6;
+	
+	t10 = p + 3;
+	STACK[t10] = t8; // STACK[3] = 5;
+	
+	HEAP[t8] = 0;
+	HEAP[t9] = 0;
+	
+	//declaracion a
+	t11 = p + 4;
+	t12 = p + 5;
+	t13 = p + 6;
+	t14 = p + 7;
+	t15 = p + 8;
+	
+	STACK[t11] = 0;
+	STACK[t12] = 0;
+	STACK[t13] = 0;
+	STACK[t14] = 0;
+	STACK[t15] = 0;
+	
+	//declaracion c
+	t16 = p + 9;
+	STACK[t16] = 0;
+	
+	//asignacion de c
+	t17 = p + 9; //direccion c
+	
+	t18 = p + 3;
+	t19 = STACK[t18]; // es una direccion de la h no es un valor
+	h = h + 5;
+	
+	call getA();
+	t20 = h + 2;
+	t21 = HEAP[t20]; //VALOR Y NO UNA REFERENCIA
+	
+	STACK[t17] = t21;
+	
+	h = h - 5;
+	
+	//declaracion cadena
+	t22 = p + 10;
+	STACK[t22] = 8;
+	
+	t23 = h + 8;
+	t24 = h + 9;
+	t25 = h + 10;
+	t26 = h + 11;
+	
+	HEAP[t23] = 8; //HEAP[t23] = 'h';
+	HEAP[t24] = 16; //HEAP[t23] = 'o';
+	HEAP[t25] = 12; //HEAP[t23] = 'l';
+	HEAP[t26] = 1; //HEAP[t23] = 'a';
+	
+	///cambiar a dat2
+	t27 = p + 2; // 2
+	t28 = STACK[t27];//t28 =  STACK[2] = 2 
+	
+	//cambio tabla de simbolos
+	h = h + 2;
+	t29 = h + 2; //direccion de c
+	
+	t30 = h + 10; //t30 = 12
+	t31 = h + 11;
+	t32 = h + 12;
+	
+	HEAP[t29] = t30; //HEAP[4] = 12
+	
+	h = h - 2;
+	
+	//asignacion c[3] = 78;
+	h = h + 2;
+	t30 = h + 2; //t30 = 2 + 2 = 4
+	t31 = HEAP[t30]; //REFERENCIA
+	
+	t32 = t31 + 2; //t32 = 12 + 2 = 14 - Posicion HEAP
+	
+	
+	HEAP[t32] = 78; // HEAP[14] = 78;
+	h = h - 2;
+}
+
+int getA(){
+	//codigo 3D
+	
+}

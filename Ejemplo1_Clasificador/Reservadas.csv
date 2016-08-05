@@ -1,0 +1,38 @@
+Palabra Reservada, Linea, Columna, Descripcion
+int,0,0,reservada tipo int
+int,1,0,reservada tipo int
+int,2,0,reservada tipo int
+int,3,0,reservada tipo int
+int,5,0,reservada tipo int
+int,6,0,reservada tipo int
+stack,12,1,Pila Asignacion de valor
+heap,14,1,Monticulo Asignacion de valor
+heap,15,1,Monticulo Asignacion de valor
+stack,24,1,Pila Asignacion de valor
+heap,26,1,Monticulo Asignacion de valor
+heap,27,1,Monticulo Asignacion de valor
+heap,28,1,Monticulo Asignacion de valor
+stack,35,1,Pila Asignacion de valor
+heap,37,1,Monticulo Asignacion de valor
+heap,38,1,Monticulo Asignacion de valor
+stack,47,1,Pila Asignacion de valor
+stack,48,1,Pila Asignacion de valor
+stack,49,1,Pila Asignacion de valor
+stack,50,1,Pila Asignacion de valor
+stack,51,1,Pila Asignacion de valor
+stack,55,1,Pila Asignacion de valor
+heap,61,7,Pila Acceso a valor
+call,64,1,Reservada para llamadas a metodos
+heap,66,7,Monticulo Acceso a valor
+stack,68,1,Pila Asignacion de valor
+stack,74,1,Pila Asignacion de valor
+heap,81,1,Monticulo Asignacion de valor
+heap,82,1,Monticulo Asignacion de valor
+heap,83,1,Monticulo Asignacion de valor
+heap,84,1,Monticulo Asignacion de valor
+heap,88,7,Pila Acceso a valor
+heap,98,1,Monticulo Asignacion de valor
+heap,105,7,Monticulo Acceso a valor
+heap,110,1,Monticulo Asignacion de valor
+main,6,4,rservada para metodo principal
+int,114,0,reservada tipo int

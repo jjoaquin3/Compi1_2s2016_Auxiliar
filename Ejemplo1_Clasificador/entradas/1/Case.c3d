@@ -1,0 +1,65 @@
+int stack[10];
+int p = 0;
+int t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18;
+void main(){
+	t1 = p + 0;
+	stack[t1] = 4;
+	t2 = p + 0;
+	t3 = stack[t2];
+	if(t3 > 0) goto L1;
+	goto L2;
+	L1:
+	t4 = p + 0;
+	t5 = stack[t4];
+	if(t5 <= 10) goto L3;
+	goto L4;
+	L3:
+	printf("Esta entre 0 y 10\n");
+	goto L7;
+	L2,L4:
+	t6 = p + 0;
+	t7 = stack[t7];
+	if(t7 > 10) goto L5;
+	goto L6;
+	L5:
+	printf("Es mayor que 10\n");
+	L6:
+	L7:
+	
+	t8 = p + 1;
+	stack[t8] = 10;
+	t9 = p + 1;
+	t10 = stack[t9];
+	if(t10 < 0) goto L8;
+	goto L9;
+	L9:
+	t11 = p + 1;
+	t12 = stack[t11];
+	if(t12 > 100) goto L10;
+	goto L11;
+	L8,L10:
+	printf("Esta fuera de 0 y 100\n");
+	goto L12;
+	L11:
+	printf("Esta dentro de 0 y 100\n");
+	L12:
+	
+	t13 = p + 2;
+	stack[t13] = 5;
+	t14 = p + 3;
+	stack[t14] = 9;
+	t15 = p + 2;
+	t16 = stack[t15];
+	if(t16 == 5) goto L13;
+	goto L14;
+	L13:
+	printf("Es un cinco\n");
+	L14:
+	t17 = p +3;
+	t18 = stack[t17];
+	if(t18 == 4) goto L15;
+	goto L16;
+	L15:
+	printf("Es un cuatro XD\n");
+	L16:
+}

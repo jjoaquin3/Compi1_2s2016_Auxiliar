@@ -1,0 +1,304 @@
+/*----------------------------------------------------------------------------
+--------------------- 1ra. Area: Codigo de Usuario
+----------------------------------------------------------------------------*/
+
+//-------> Importaciones 
+//-------> Paquetes 
+
+package Analizadores;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import Acciones.ErrorT;
+import Acciones.Token;
+
+
+//-------> Codigo para el parser, variables, metodos
+
+parser code
+{:  
+    public ArrayList<ErrorT> lista_errores;
+    public ArrayList<Token> lista_reservadas;
+
+    //Metodo al que se llama automaticamente ante algun error sintactico
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico Recuperado !!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+       
+        lista_errores.add(new ErrorT(lexema, fila, columna,"sintactico" ,"Simbolo no esperado"));
+    }
+
+    //Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode !!!!!!! ");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+       
+        lista_errores.add(new ErrorT(lexema, fila, columna,"sintactico" ,"Simbolo no esperado, Panic Mode"));
+    }
+
+    public void semantic(Symbol cur_token, String n) 
+    {
+        System.out.println("error semantico ");
+    }
+
+    public void semantic(String msg, Object obj) {}
+
+:}
+
+
+//-------> Codigo para las acciones gramaticales
+
+action code
+{:
+
+    public void guardarReservada(String valor, int linea, int columna, String descripcion)
+    {
+        parser.lista_reservadas.add(new Token(valor, linea, columna, descripcion));
+    }
+
+:}  
+
+
+
+/*----------------------------------------------------------------------------
+--------------------- 2da. Area: Declaraciones
+----------------------------------------------------------------------------*/
+
+//-------> Simbolos
+terminal igual1, coma, dosp, fin;
+terminal apar, cpar, alla, clla, acor, ccor;
+
+//-------> Operadores
+terminal igual2, diferente, mayor, menor, mayorigual, menorigual;
+terminal mas, menos, por, dividir, modular, potenciar, aumento, decremento;
+
+//-------> Reservadas tipos de datos
+terminal rvoid, rint, rdouble, rstring, rchar, rbool;
+
+//-------> Reservadas del sistem
+terminal rstack, rheap;
+terminal rmain;
+terminal printf, prints, printi;
+terminal rif, rgoto, rcall;
+terminal String tstring, tchar, rtrue, rfalse, id, numero;
+
+non terminal INICIO, CUERPO;
+non terminal DECLARACIONES, DECLARACION, TIPO, STACK, HEAP, PUNTERO, TEMPORALES;
+non terminal METODOS, METODO, NORMAL, MAIN;
+non terminal BLOCK, SENT;
+non terminal ASIG;
+non terminal CALL; 
+non terminal ET, LIST;
+non terminal IF;
+non terminal SALTO;
+non terminal COND, EXP;
+non terminal PRINTF, PRINTS, PRINTI;
+
+precedence left igual1, igual2, diferente;
+precedence left mayor, menor, mayorigual, menorigual;
+precedence left mas, menos;
+precedence left por, dividir;
+precedence left modular, potenciar;
+precedence left aumento, decremento;
+
+start with INICIO;
+
+
+/*-------------------------------------------------------------------
+--------------------- 3ra. y ultima area: Reglas Sintacticas
+-------------------------------------------------------------------*/
+
+INICIO::= 
+    {:
+        //lista_reservadasB = parser.archivoA.lista_reservadas;
+    :}
+    CUERPO
+    {:
+        //RESULT = algo;
+    :}
+    | error INICIO
+    |;
+
+CUERPO::= DECLARACIONES METODOS
+    | METODOS;
+
+DECLARACIONES::= DECLARACIONES DECLARACION
+    | DECLARACION;  
+
+DECLARACION::= STACK
+    | HEAP
+    | PUNTERO
+    | TEMPORALES;
+
+STACK::= rstack acor numero ccor fin
+    | TIPO rstack acor numero ccor fin;
+
+HEAP::= rheap acor numero ccor fin
+    |   TIPO rheap acor numero ccor fin;
+
+PUNTERO::= id igual1 numero fin
+        | TIPO id igual1 numero fin;
+
+TEMPORALES::= TIPO LIST fin;
+
+TIPO::= rvoid:lugar
+        {:
+            guardarReservada("void",lugarright, lugarleft,"reservada tipo void");
+        :}
+    | rint:lugar
+        {:
+            guardarReservada("int",lugarright, lugarleft,"reservada tipo int");
+        :}
+    | rdouble:lugar
+        {:
+            guardarReservada("double",lugarright, lugarleft,"reservada tipo double");
+        :}
+    | rstring:lugar
+        {:
+            guardarReservada("string",lugarright, lugarleft,"reservada tipo string");
+        :}
+    | rchar:lugar
+        {:
+            guardarReservada("char",lugarright, lugarleft,"reservada tipo char");
+        :}
+    | rbool:lugar
+        {:
+            guardarReservada("bool",lugarright, lugarleft,"reservada tipo bool");
+        :};
+
+METODOS::= METODOS METODO
+    | METODO;
+
+METODO::= MAIN
+    | NORMAL;
+
+MAIN::= TIPO rmain:lugar apar cpar alla BLOCK clla
+        {:
+            guardarReservada("main",lugarright, lugarleft,"rservada para metodo principal");
+        :}
+    | TIPO rmain:lugar apar cpar alla clla
+        {:
+            guardarReservada("main",lugarright, lugarleft,"rservada para metodo principal");
+        :};
+
+NORMAL::= TIPO id apar cpar alla BLOCK clla
+    | TIPO id apar cpar alla clla;
+
+BLOCK::= BLOCK SENT
+    | SENT;
+
+SENT::= ASIG
+    | CALL
+    | ET
+    | IF
+    | SALTO
+    | PRINTF
+    | PRINTS
+    | PRINTI;
+
+ASIG::= id igual1 EXP fin
+    | rstack:lugar acor EXP ccor igual1 EXP fin
+        {:
+            guardarReservada("stack",lugarright, lugarleft,"Pila Asignacion de valor");
+        :}
+    | rheap:lugar acor EXP ccor igual1 EXP fin
+        {:
+            guardarReservada("heap",lugarright, lugarleft,"Monticulo Asignacion de valor");
+        :};
+
+CALL::= rcall:lugar id apar cpar fin
+        {:
+            guardarReservada("call",lugarright, lugarleft,"Reservada para llamadas a metodos");
+        :};
+
+ET::= LIST dosp;
+
+LIST::= LIST coma id
+    | id;
+
+SALTO::= rgoto:lugar id fin
+        {:
+            guardarReservada("goto",lugarright, lugarleft,"Indicador de Salto incondicional");
+        :};
+
+IF::= rif:lugar1 COND rgoto id:lugar2 fin
+        {:
+            guardarReservada("if",lugar1right, lugar1left,"Reservada para el flujo de contro if");
+            guardarReservada("goto",lugar2right, lugar2left,"Indicador de Salto condicional");
+        :}
+    | rif:lugar1 apar COND cpar rgoto:lugar2 id fin
+        {:
+            guardarReservada("if",lugar1right, lugar1left,"Reservada para el flujo de contro if");
+            guardarReservada("if", lugar2right, lugar2left,"Indicador de Salto condicional");
+        :};
+
+PRINTF::= printf:lugar apar EXP cpar fin
+        {:
+            guardarReservada("printf",lugarright, lugarleft,"Reservada de impresion de flotantes");
+        :};
+
+PRINTS::= prints:lugar apar EXP cpar fin
+        {:
+            guardarReservada("prints",lugarright, lugarleft,"Reservada de impresion de cadenas");
+        :};
+
+PRINTI::= printi:lugar apar EXP cpar fin
+        {:
+            guardarReservada("printi",lugarright, lugarleft,"Reservada de impresion de enteros");
+        :};
+
+EXP::= rstack:lugar acor EXP ccor
+        {:
+            guardarReservada("heap",lugarright, lugarleft,"Pila Acceso a valor");
+        :}
+    | rheap:lugar acor EXP ccor
+        {:
+            guardarReservada("heap",lugarright, lugarleft,"Monticulo Acceso a valor");
+        :}
+    | EXP mas EXP
+    | EXP menos EXP
+    | EXP por EXP
+    | EXP dividir EXP
+    | EXP modular EXP
+    | EXP potenciar EXP
+    | EXP aumento
+    | EXP decremento
+    | numero
+    | tstring
+    | tchar
+    | rtrue:lugar
+        {:
+            guardarReservada("true",lugarright, lugarleft,"Valor logico verdadero");
+        :}
+    | rfalse:lugar
+        {:
+            guardarReservada("false",lugarright, lugarleft,"Valor logico falso");
+        :}
+    | id:iidd;
+
+COND::= EXP igual2 EXP
+    | EXP diferente EXP
+    | EXP menor:op EXP:der
+    | EXP mayor:op EXP:der
+    | EXP menorigual EXP
+    | EXP mayorigual EXP;
+
+/*----------------------------------------------------------------------------->
+                    //Atte.   José Joaquin Cacao Chub
+                    //Carné:  2012-12577
+                    //Correo: jjcacao2@gmail.com
+----------------------------------------------------------------------------->*/

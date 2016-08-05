@@ -1,0 +1,24 @@
+Conjunto de ejemplos del laboratorio de
+
+Organización de Lenguajes y Compiladores 1 - Sección C
+Facultad de Ingeniería
+Universidad de San Carlos de Guatemala
+
+
+//-------------------------------------------------------------------->
+                    Atte.   José Joaquin Cacao Chub
+                    Carné:  2012-12577
+                    Correo: jjcacao2@gmail.com
+//-------------------------------------------------------------------->
+
+
+Ejemplo1:
+	Uso de JFLEX/CUP
+	Clasificador de palabras reservadas
+	Manejo basico de errores lexicos, sintacticos
+
+Ejemplo2:	
+	Uso de JFLEX/CUP
+	Calculadora de operaciones aritemeticas (+,-,*,^,++,--) de enteros
+	Manejo basico de errores lexicos, sintacticos
+

@@ -1,0 +1,185 @@
+/*----------------------------------------------------------------------------
+--------------------- 1ra. Area: Codigo de Usuario
+----------------------------------------------------------------------------*/
+
+//-------------------> Importaciones 
+//-------------------> Paquetes 
+package Analizadores;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+
+//-------------------> Codigo para el parser, variables, metodos
+parser code
+{:  
+    public String salida="";
+
+    //-------------------> Metodo al que se llama automaticamente ante algun error sintactico.
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico Recuperado !!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+    }
+
+
+    //-------------------> Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores.
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode!!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);       
+    }
+
+
+    public void semantic(Symbol cur_token, String n) 
+    {
+        System.out.println("error semantico ");
+    }
+
+
+    public void semantic(String msg, Object obj) {}
+
+:}
+
+
+//-------------------> Codigo para las acciones gramaticales
+action code
+{:
+:}  
+
+
+/*----------------------------------------------------------------------------
+--------------------- 2da. Area: Declaraciones
+----------------------------------------------------------------------------*/
+
+//-------------------> Declaración de Terminales
+//-------------------> se les puede indicar x tipo
+//-------------------> numero es string porque me interesa el valor lexico que trae
+terminal mas, menos, por, dividir, potenciar, aumento, decremento;
+terminal apar, cpar, punto_coma;
+terminal String numero;
+
+
+//-------------------> Declaración de No Terminales
+//-------------------> se les puede indicar x tipo
+non terminal String INICIO;
+non terminal String LISTA, OPERACION, EXP;
+
+
+//-------------------> Indicar precedencia(de menor a mayor) y asociatividad
+//-------------------> Generalmente se usa si la gramatica es Ambigua
+precedence left mas, menos;
+precedence left por, dividir;
+precedence left potenciar;
+precedence left aumento, decremento;    //mientras mas abajo se declare, mayor precedencia
+
+
+//-------------------> No Terminal inicial
+start with INICIO;
+
+
+/*-------------------------------------------------------------------
+--------------------- 3ra. y ultima area: Reglas Sintacticas
+-------------------------------------------------------------------*/
+
+INICIO::= LISTA:lista_resultados
+        {:
+            //a la variable creada en el parser code: "salida" se le asigna
+            //la lista de resultados
+
+            parser.salida = lista_resultados;
+        :}
+    | error INICIO
+        {:
+            //Error, se sincroniza hasta que exista una secuencia segura
+            //en base a la produccion INICIO
+
+            parser.salida += "\nError";
+        :}
+    | ;
+
+LISTA::= LISTA:resultados OPERACION:resultado
+        {:
+            //Se anidan los resultados de la lista de operaciones
+
+            String sub_salida = resultados + "\n" + resultado;
+            RESULT = sub_salida;
+        :}
+    | OPERACION:resultado
+        {:
+            //Devulve el resultado de una operacion
+            RESULT = resultado;
+        :};
+
+OPERACION::= EXP:val punto_coma
+        {:
+            //Devulve el valor resultado de una operacion
+            RESULT = val;
+        :};
+
+EXP::= EXP:izq mas EXP:der
+        {:
+            int val1 = Integer.parseInt(izq);
+            int val2 = Integer.parseInt(der);
+            int retornar = val1 + val2;
+            RESULT = String.valueOf(retornar);
+        :}
+    | EXP:izq menos EXP:der
+        {:
+            int val1 = Integer.parseInt(izq);
+            int val2 = Integer.parseInt(der);
+            int retornar = val1 - val2;
+            RESULT = String.valueOf(retornar);
+        :}
+    | EXP:izq por EXP:der
+        {:
+            int val1 = Integer.parseInt(izq);
+            int val2 = Integer.parseInt(der);
+            int retornar = val1 * val2;
+            RESULT = String.valueOf(retornar);
+        :}
+    | EXP:izq potenciar EXP:der
+        {:
+            double base = Double.parseDouble(izq);
+            double exponente = Double.parseDouble(der);
+            int retornar = (int)Math.pow(base, exponente);
+            RESULT = String.valueOf(retornar);
+        :}
+    | EXP:val aumento
+        {:
+            int val1 = Integer.parseInt(val);
+            int retornar = val1 + 1;
+            RESULT = String.valueOf(retornar);
+        :}
+    | EXP:val decremento
+        {:
+            int val1 = Integer.parseInt(val);
+            int retornar = val1 - 1;
+            RESULT = String.valueOf(retornar);
+        :}
+    | apar EXP:val cpar
+        {:
+            RESULT = val;
+        :}
+    | numero:dato
+        {:
+            RESULT = dato;
+        :};
+
+
+/*----------------------------------------------------------------------------->
+                    //Atte.   José Joaquin Cacao Chub
+                    //Carné:  2012-12577
+                    //Correo: jjcacao2@gmail.com
+----------------------------------------------------------------------------->*/
