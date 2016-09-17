@@ -29,6 +29,6 @@ Ejemplo3:
 Ejemplo4:	
 	Uso de JFLEX/CUP
 	Implementando árbols de Sintaxis Abstracta	
-	Realiza el grafico de sentencias con sus operaciones aritmeticas (+,-,*,^,++,--) de enteros
+	Realiza el grafico de sentencias con sus operaciones aritmeticas, uso de booleanos
 	Recorrido para analisis, intepretación y analisis semantico del AST
 	Manejo basico de errores lexicos, sintacticos
