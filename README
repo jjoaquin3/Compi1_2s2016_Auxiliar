@@ -4,13 +4,11 @@ Organización de Lenguajes y Compiladores 1 - Sección C
 Facultad de Ingeniería
 Universidad de San Carlos de Guatemala
 
-
 //-------------------------------------------------------------------->
                     Atte.   José Joaquin Cacao Chub
                     Carné:  2012-12577
                     Correo: jjcacao2@gmail.com
 //-------------------------------------------------------------------->
-
 
 Ejemplo1:
 	Uso de JFLEX/CUP
@@ -19,6 +17,18 @@ Ejemplo1:
 
 Ejemplo2:	
 	Uso de JFLEX/CUP
-	Calculadora de operaciones aritemeticas (+,-,*,^,++,--) de enteros
+	Calculadora de operaciones aritmeticas (+,-,*,^,++,--) de enteros
 	Manejo basico de errores lexicos, sintacticos
 
+Ejemplo3:	
+	Uso de JFLEX/CUP
+	Implementando árbols de Sintaxis Abstracta
+	Realiza el grafico de operaciones aritmeticas (+,-,*,^,++,--) de enteros
+	Manejo basico de errores lexicos, sintacticos
+
+Ejemplo4:	
+	Uso de JFLEX/CUP
+	Implementando árbols de Sintaxis Abstracta	
+	Realiza el grafico de sentencias con sus operaciones aritmeticas (+,-,*,^,++,--) de enteros
+	Recorrido para analisis, intepretación y analisis semantico del AST
+	Manejo basico de errores lexicos, sintacticos

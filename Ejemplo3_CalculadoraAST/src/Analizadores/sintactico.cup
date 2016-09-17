@@ -1,0 +1,173 @@
+/*----------------------------------------------------------------------------
+--------------------- 1ra. Area: Codigo de Usuario
+----------------------------------------------------------------------------*/
+
+//-------------------> Importaciones 
+//-------------------> Paquetes 
+package Analizadores;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import Acciones.ErrorT;
+import Acciones.Token;
+
+//-------------------> Codigo para el parser, variables, metodos
+parser code
+{:  
+    public ArrayList<ErrorT> lista_errores;
+    public Nodo raiz;
+
+    //Metodo al que se llama automaticamente ante algun error sintactico
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico Recuperado !!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+       
+        lista_errores.add(new ErrorT(lexema, fila, columna,"sintactico" ,"Simbolo no esperado"));
+    }
+
+    //Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {        
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode !!!!!!! ");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+       
+        lista_errores.add(new ErrorT(lexema, fila, columna,"sintactico" ,"Simbolo no esperado, Panic Mode"));
+    }
+
+    public void semantic(Symbol cur_token, String n) 
+    {
+        System.out.println("error semantico ");
+    }
+
+    public void semantic(String msg, Object obj) {}
+
+:}
+
+
+//-------------------> Codigo para las acciones gramaticales
+action code
+{:
+:}  
+
+
+/*----------------------------------------------------------------------------
+--------------------- 2da. Area: Declaraciones
+----------------------------------------------------------------------------*/
+
+//-------------------> Declaración de Terminales
+//-------------------> se les puede indicar x tipo
+//-------------------> numero es string porque me interesa el valor lexico que trae
+terminal mas, menos, por,dividir, potenciar, aumento, decremento;
+terminal apar, cpar, punto_coma;
+terminal String numero;
+
+
+//-------------------> Declaración de No Terminales
+//-------------------> se les puede indicar x tipo
+non terminal Nodo INICIO;
+non terminal Nodo LISTA, OPERACION, EXP;
+
+
+//-------------------> Indicar precedencia(de menor a mayor) y asociatividad
+//-------------------> Generalmente se usa si la gramatica es Ambigua
+precedence left mas, menos;
+precedence left por, dividir;
+precedence left potenciar;
+precedence left aumento, decremento;    //mientras mas abajo se declare, mayor precedencia
+
+
+//-------------------> No Terminal inicial
+start with INICIO;
+
+
+/*-------------------------------------------------------------------
+--------------------- 3ra. y ultima area: Reglas Sintacticas
+-------------------------------------------------------------------*/
+
+INICIO::= LISTA:lista
+        {:            
+            parser.raiz = lista;
+        :}
+    | error INICIO
+    | ;
+
+LISTA::= LISTA:lista OPERACION:operacion
+        {:
+            lista.hijos.add(operacion);
+            RESULT=lista;
+        :}
+    | OPERACION:operacion
+        {:
+            Nodo lista = new Nodo("OPERACIONES",operacionleft,operacionright);
+            lista.hijos.add(operacion);
+            RESULT = lista;
+        :};
+
+OPERACION::= EXP:val punto_coma
+        {:
+            RESULT = val;
+        :};
+
+EXP::= EXP:izq mas:s EXP:der
+        {:
+            RESULT = new Nodo("+",sleft , sright);
+            RESULT.hijos.add(izq);
+            RESULT.hijos.add(der);
+        :}
+    | EXP:izq menos:s EXP:der
+        {:
+            RESULT = new Nodo("-",sleft , sright);
+            RESULT.hijos.add(izq);
+            RESULT.hijos.add(der);
+        :}
+    | EXP:izq por:s EXP:der
+        {:
+            RESULT = new Nodo("*",sleft , sright);
+            RESULT.hijos.add(izq);
+            RESULT.hijos.add(der);
+        :}
+    | EXP:izq dividir:s EXP:der
+        {:
+            RESULT = new Nodo("/",sleft , sright);
+            RESULT.hijos.add(izq);
+            RESULT.hijos.add(der);
+        :}
+    | EXP:izq potenciar:s EXP:der
+        {:
+            RESULT = new Nodo("^",sleft , sright);
+            RESULT.hijos.add(izq);
+            RESULT.hijos.add(der);
+        :}
+    | EXP:val aumento
+        {:
+            RESULT = new Nodo("++", valleft, valright);
+            RESULT.hijos.add(val);
+        :}
+    | EXP:val decremento
+        {:
+            Nodo padre = new Nodo("--", valleft, valright);
+            padre.hijos.add(val);
+            RESULT = padre;
+        :}
+    | apar EXP:val cpar
+        {:
+            RESULT = val;
+        :}
+    | numero:dato
+        {:
+            Nodo n = new Nodo(dato, datoleft, datoright);
+            RESULT =n;            
+        :};

@@ -1,0 +1,9 @@
+start
+
+	operar(96+1);
+	desplegar(19*9-1);
+	imprimir(1+1);
+	imprimir(2+1*3);
+	imprimir(2*2*2*2*2);
+
+end
